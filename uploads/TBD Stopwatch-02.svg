@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1024 1024">
+  <defs>
+    
+    <filter id="luminosity-noclip" x="333.51" y="222.48" width="369.84" height="297.36" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse">
+      <feFlood flood-color="#fff" result="bg"></feFlood>
+      <feBlend in="SourceGraphic" in2="bg"></feBlend>
+    </filter>
+    <mask id="mask" x="333.51" y="222.48" width="369.84" height="297.36" maskUnits="userSpaceOnUse">
+      <g class="cls-8">
+        <image width="1541" height="1239" transform="translate(333.51 222.48) scale(.24)"></image>
+      </g>
+    </mask>
+    <filter id="luminosity-noclip-2" x="333.51" y="516.96" width="369.84" height="297.36" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse">
+      <feFlood flood-color="#fff" result="bg"></feFlood>
+      <feBlend in="SourceGraphic" in2="bg"></feBlend>
+    </filter>
+    <mask id="mask-1" x="333.51" y="516.96" width="369.84" height="297.36" maskUnits="userSpaceOnUse">
+      <g class="cls-3">
+        <image width="1541" height="1239" transform="translate(333.51 516.96) scale(.24)"></image>
+      </g>
+    </mask>
+  </defs>
+  <g class="cls-4">
+    <g id="Layer_1" data-name="Layer 1">
+      <g>
+        <g class="cls-2">
+          <g>
+            <image class="cls-6" width="1524" height="1222" transform="translate(335.56 224.53) scale(.24)"></image>
+            <path class="cls-5" d="M641.73,393.03c-32.79,44.32-68.1,73.37-75.7,78.26-6.53,4.21-14.5,8.95-23.89,13.72-18.94,9.62-41.36,9.62-60.29,0-9.4-4.77-17.37-9.51-23.89-13.72-7.6-4.9-42.9-33.94-75.7-78.26-21.46-29.01-44.63-64.82-28.68-101.65,9.98-23.05,32.61-35.55,55.85-42.11,33.09-9.34,68.32-11.98,102.57-11.98s69.48,2.63,102.57,11.98c23.24,6.56,45.86,19.07,55.85,42.11,15.95,36.84-7.22,72.65-28.68,101.65Z"></path>
+          </g>
+        </g>
+        <g class="cls-1">
+          <g>
+            <image class="cls-6" width="1524" height="1222" transform="translate(335.56 519.01) scale(.24)"></image>
+            <path class="cls-7" d="M382.27,630.97c32.79-44.32,68.1-73.37,75.7-78.26,6.53-4.21,14.5-8.95,23.89-13.72,18.94-9.62,41.36-9.62,60.29,0,9.4,4.77,17.37,9.51,23.89,13.72,7.6,4.9,42.9,33.94,75.7,78.26,21.46,29.01,44.63,64.82,28.68,101.65-9.98,23.05-32.61,35.55-55.85,42.11-33.09,9.34-68.32,11.98-102.57,11.98s-69.48-2.63-102.57-11.98c-23.24-6.56-45.86-19.07-55.85-42.11-15.95-36.84,7.22-72.65,28.68-101.65Z"></path>
+          </g>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>
