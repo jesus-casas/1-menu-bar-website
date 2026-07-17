@@ -25,6 +25,57 @@
     @media (prefers-reduced-motion: reduce){.rv{opacity:1!important;transform:none!important;transition:none}}
     @keyframes drift{0%,100%{transform:translate3d(0,0,0)}50%{transform:translate3d(0,-24px,0)}}
     .nobar::-webkit-scrollbar{display:none;width:0;height:0}
+
+    /* ---------------------------------------------------------------
+       RESPONSIVE.  Read this before touching anything below.
+
+       support.js:636 parses style="" and sets it as a REAL inline style
+       on element.style. Inline styles beat any stylesheet rule, so these
+       overrides NEED !important. That is also why they are safe: the rule
+       does not exist above the breakpoint, so desktop cannot regress.
+
+       Do NOT !important a property that an element also sets via
+       style-hover — support.js:1182 injects those as ordinary
+       (non-important) rules, so !important here would kill the hover.
+       Collision set: background / color / transform / border-color on the
+       nav links, nav CTA, and CTA buttons. display is safe.
+
+       Do NOT try to override a `font:` shorthand by splitting it; use
+       font-size instead (cssToObj at support.js:344 splits naively).
+
+       900 = stack (multi-column -> one column)
+       560 = compress (padding, nav CTA, nested grids)
+       Both sit in device gaps: 393/430 phones, 768/820 iPad, 1024 landscape.
+       --------------------------------------------------------------- */
+    @media (max-width:900px){
+      /* minmax(0,1fr), not 1fr: grid items default to min-width:auto and refuse
+         to shrink below min-content, which blows the track past its container */
+      .g2,.g3,.g2s,.g2p{grid-template-columns:minmax(0,1fr)!important}
+      .g2{gap:32px!important}
+      /* Pro is order:2 in the DOM, so a naive collapse puts Free on top */
+      .g2p>*:first-child{order:1!important}
+      .g2p>*:last-child{order:2!important}
+    }
+    @media (max-width:560px){
+      section,.sec,nav{padding-left:18px!important;padding-right:18px!important}
+      .card{padding:40px 20px!important}
+      .panel{padding:16px!important}
+      .mock{height:360px!important}
+      .g2ring{grid-template-columns:minmax(0,1fr)!important}
+      /* keep the streak cards 2-up (they read well side by side) but trim their
+         padding so min-content fits: 2x148.5+16 = 313 > 305 otherwise */
+      .g2n{grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important}
+      .g2n>*{padding:12px!important}
+      /* 30 bars have a hard 4px min-width in JS (insightBars), so 30*4 + 29*5
+         = 265 cannot fit the 259px panel. Only the gap is negotiable. */
+      .bars{gap:2px!important}
+      .hide-sm{display:none!important}
+      nav{padding-top:10px!important;padding-bottom:10px!important}
+      /* font-size, not the font shorthand; padding, not background/color
+         (those collide with style-hover on these links) */
+      .navlinks{gap:2px!important}
+      .navlinks>*{padding-left:9px!important;padding-right:9px!important;font-size:13px!important}
+    }
   </style>
 </helmet>
 
@@ -36,12 +87,12 @@
       {{ iconNav }}
       <span style="font:600 17px 'Schibsted Grotesk';letter-spacing:-0.01em;color:#F1F3EF">Deepflow</span>
     </div>
-    <div style="position:absolute;left:50%;transform:translateX(-50%);display:flex;gap:6px">
+    <div class="navlinks" style="display:flex;gap:6px">
       <span onClick="{{ goFeatures }}" style="font:500 14px 'Schibsted Grotesk';color:#a7aaa2;padding:8px 14px;border-radius:9px;cursor:pointer" style-hover="background:rgba(255,255,255,0.06);color:#F1F3EF">Features</span>
       <span onClick="{{ goPricing }}" style="font:500 14px 'Schibsted Grotesk';color:#a7aaa2;padding:8px 14px;border-radius:9px;cursor:pointer" style-hover="background:rgba(255,255,255,0.06);color:#F1F3EF">Pricing</span>
       <span onClick="{{ goAbout }}" style="font:500 14px 'Schibsted Grotesk';color:#a7aaa2;padding:8px 14px;border-radius:9px;cursor:pointer" style-hover="background:rgba(255,255,255,0.06);color:#F1F3EF">About</span>
     </div>
-    <div onClick="{{ download }}" style="font:600 13.5px 'Schibsted Grotesk';color:#0B0D0B;background:#F1F3EF;padding:9px 16px;border-radius:10px;cursor:pointer" style-hover="background:#ffffff">Coming Soon</div>
+    <div class="hide-sm" onClick="{{ download }}" style="font:600 13.5px 'Schibsted Grotesk';color:#0B0D0B;background:#F1F3EF;padding:9px 16px;border-radius:10px;cursor:pointer" style-hover="background:#ffffff">Coming Soon</div>
   </nav>
 
   <!-- ================= HOME ================= -->
@@ -53,14 +104,14 @@
       <div style="position:absolute;inset:0;background:radial-gradient(680px 440px at 50% -8%, rgba(255,255,255,0.07), transparent 70%), radial-gradient(620px 420px at 24% 92%, rgba(74,157,91,0.14), transparent 72%), radial-gradient(560px 380px at 80% 78%, rgba(126,88,194,0.08), transparent 72%);animation:drift 16s ease-in-out infinite"></div>
       <div style="position:relative;max-width:1140px;margin:0 auto;display:flex;flex-direction:column;align-items:center;text-align:center">
         <div class="rv" style="font:600 12px/1 'JetBrains Mono';letter-spacing:0.18em;color:#7d8079;margin-bottom:24px">FOCUS TIMER FOR MACOS · LIVES IN YOUR MENU BAR</div>
-        <h1 class="rv" style="font:600 clamp(44px,7vw,76px)/1.02 'Schibsted Grotesk';letter-spacing:-0.04em;color:#F4F6F2;max-width:900px">Get 1% better,<br>every single day.</h1>
+        <h1 class="rv" style="font:600 clamp(34px,7vw,76px)/1.02 'Schibsted Grotesk';letter-spacing:-0.04em;color:#F4F6F2;max-width:900px">Get 1% better,<br>every single day.</h1>
         <p class="rv" style="font:400 clamp(17px,2vw,20px)/1.55 'Schibsted Grotesk';color:#9ea29a;max-width:560px;margin-top:26px">Deepflow turns deep work into a daily habit you can actually see. Focus from your menu bar, track every session, and hold yourself accountable — one square at a time.</p>
         <div class="rv" style="display:flex;gap:12px;margin-top:34px;flex-wrap:wrap;justify-content:center">
           <div onClick="{{ download }}" style="font:600 15px 'Schibsted Grotesk';color:#0B0D0B;background:#F1F3EF;padding:14px 26px;border-radius:12px;cursor:pointer" style-hover="background:#ffffff;transform:translateY(-1px)">Coming Soon</div>
           <div onClick="{{ seeHow }}" style="font:600 15px 'Schibsted Grotesk';color:#E7E9E5;border:1px solid rgba(255,255,255,0.2);padding:14px 24px;border-radius:12px;cursor:pointer" style-hover="background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.35)">See how it works</div>
         </div>
         <div class="rv" style="margin-top:56px;display:flex;flex-direction:column;align-items:center;gap:16px">
-          <div style="padding:20px;background:rgba(11,13,11,0.78);border:1px solid rgba(255,255,255,0.09);border-radius:20px;box-shadow:0 60px 110px -38px rgba(0,0,0,0.9);overflow:hidden;max-width:92vw">{{ heroWidget }}</div>
+          <div style="padding:20px;background:rgba(11,13,11,0.78);border:1px solid rgba(255,255,255,0.09);border-radius:20px;box-shadow:0 60px 110px -38px rgba(0,0,0,0.9);overflow:hidden;max-width:100%">{{ heroWidget }}</div>
           <div style="font:500 12px/1 'JetBrains Mono';letter-spacing:0.04em;color:#71746d">365 days · every square is a focus session</div>
         </div>
       </div>
@@ -83,9 +134,9 @@
       <div style="max-width:1140px;margin:0 auto">
         <div class="rv" style="text-align:center;margin-bottom:60px">
           <div style="font:600 12px 'JetBrains Mono';letter-spacing:0.16em;color:#7d8079;margin-bottom:16px">HOW IT WORKS</div>
-          <h2 style="font:600 clamp(32px,4.5vw,46px)/1.08 'Schibsted Grotesk';letter-spacing:-0.03em;color:#F4F6F2">Three steps. Then just show up.</h2>
+          <h2 style="font:600 clamp(26px,4.5vw,46px)/1.08 'Schibsted Grotesk';letter-spacing:-0.03em;color:#F4F6F2">Three steps. Then just show up.</h2>
         </div>
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:18px">
+        <div class="g3" style="display:grid;grid-template-columns:repeat(3,1fr);gap:18px">
           <div class="rv" style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:30px">
             <div style="font:600 13px 'JetBrains Mono';color:#4A9D5B;margin-bottom:22px">01</div>
             <div style="font:600 21px 'Schibsted Grotesk';letter-spacing:-0.01em;color:#F1F3EF;margin-bottom:10px">Start from your menu bar</div>
@@ -109,17 +160,17 @@
     <section style="background:#ECECE5;padding:104px 30px">
       <div class="rv" style="max-width:1140px;margin:0 auto;text-align:center">
         <div style="font:600 12px 'JetBrains Mono';letter-spacing:0.16em;color:#8a8c82;margin-bottom:22px">THE COMPOUNDING EFFECT</div>
-        <div style="font:600 clamp(56px,11vw,128px)/0.92 'Schibsted Grotesk';letter-spacing:-0.05em;color:#16181a">1.01<span style="color:#4A9D5B">³⁶⁵</span> = 37.8</div>
+        <div style="font:600 clamp(30px,11vw,128px)/0.92 'Schibsted Grotesk';letter-spacing:-0.05em;color:#16181a">1.01<span style="color:#4A9D5B">³⁶⁵</span> = 37.8</div>
         <p style="font:400 clamp(17px,2vw,20px)/1.55 'Schibsted Grotesk';color:#55584f;max-width:520px;margin:28px auto 0">Get one percent better every day for a year, and you end up thirty-seven times better. Deepflow is built around that one idea — small reps, made visible.</p>
       </div>
     </section>
 
     <!-- FEATURE ROW 1 — DEVICE STACK (Direction B) -->
     <section style="padding:108px 30px 80px">
-      <div class="rv" style="max-width:1140px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:56px">
+      <div class="rv g2" style="max-width:1140px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:56px">
         <div>
           <div style="font:600 12px 'JetBrains Mono';letter-spacing:0.16em;color:#7d8079;margin-bottom:18px">MENU BAR TIMER · STOPWATCH</div>
-          <h2 style="font:600 clamp(30px,4vw,42px)/1.1 'Schibsted Grotesk';letter-spacing:-0.03em;color:#F4F6F2">A focus timer that lives where you work.</h2>
+          <h2 style="font:600 clamp(24px,4vw,42px)/1.1 'Schibsted Grotesk';letter-spacing:-0.03em;color:#F4F6F2">A focus timer that lives where you work.</h2>
           <p style="font:400 17px/1.6 'Schibsted Grotesk';color:#94998f;margin-top:18px;max-width:440px">Open it from the menu bar, switch between timer and stopwatch, and start a session without ever leaving what you're doing. No windows to manage. No app to find.</p>
           <div style="display:flex;flex-direction:column;gap:12px;margin-top:26px">
             <div style="display:flex;align-items:center;gap:11px;font:450 15px 'Schibsted Grotesk';color:#c7cabf"><span style="color:#4A9D5B">✓</span> Timer & stopwatch in one click</div>
@@ -127,7 +178,7 @@
             <div style="display:flex;align-items:center;gap:11px;font:450 15px 'Schibsted Grotesk';color:#c7cabf"><span style="color:#4A9D5B">✓</span> Sessions logged automatically</div>
           </div>
         </div>
-        <div style="position:relative;height:430px">
+        <div class="mock" style="position:relative;height:430px">
           <div style="position:absolute;top:0;left:0;right:0;height:32px;background:rgba(24,27,24,0.72);backdrop-filter:blur(18px);border:1px solid rgba(255,255,255,0.07);border-radius:9px;display:flex;align-items:center;justify-content:flex-end;gap:16px;padding:0 14px">
             <div style="width:14px;height:9px;border:1.4px solid #b9bcb4;border-radius:2px"></div>
             <span style="font:500 11px 'JetBrains Mono';color:#cdd0c8">⌘</span>
@@ -162,10 +213,10 @@
 
     <!-- FEATURE ROW 2 — PRESETS / DRAG -->
     <section style="padding:80px 30px">
-      <div class="rv" style="max-width:1140px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:56px">
+      <div class="rv g2" style="max-width:1140px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:56px">
         <div style="order:2">
           <div style="font:600 12px 'JetBrains Mono';letter-spacing:0.16em;color:#7d8079;margin-bottom:18px">POMODORO & CUSTOM PRESETS</div>
-          <h2 style="font:600 clamp(30px,4vw,42px)/1.1 'Schibsted Grotesk';letter-spacing:-0.03em;color:#F4F6F2">Drag the readout. Set the time to the second.</h2>
+          <h2 style="font:600 clamp(24px,4vw,42px)/1.1 'Schibsted Grotesk';letter-spacing:-0.03em;color:#F4F6F2">Drag the readout. Set the time to the second.</h2>
           <p style="font:400 17px/1.6 'Schibsted Grotesk';color:#94998f;margin-top:18px;max-width:440px">Built-in Pomodoro, your own presets, or grab the big readout and drag to dial in exactly the block you want. It remembers what works for you.</p>
         </div>
         <div style="order:1;display:flex;justify-content:center">
@@ -196,7 +247,7 @@
 
     <!-- FEATURE ROW 3 — FLOATING PILL + ALARM -->
     <section style="padding:80px 30px">
-      <div style="max-width:1140px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:18px">
+      <div class="g2" style="max-width:1140px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:18px">
         <div class="rv" style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.08);border-radius:22px;padding:34px;display:flex;flex-direction:column;justify-content:space-between;min-height:300px">
           <div>
             <div style="font:600 12px 'JetBrains Mono';letter-spacing:0.16em;color:#7d8079;margin-bottom:16px">ALWAYS-ON-TOP</div>
@@ -232,11 +283,11 @@
       <div class="rv" style="max-width:1140px;margin:0 auto">
         <div style="text-align:center;max-width:640px;margin:0 auto 44px">
           <div style="font:600 12px 'JetBrains Mono';letter-spacing:0.16em;color:#7d8079;margin-bottom:18px">FOCUS STATS</div>
-          <h2 style="font:600 clamp(30px,4vw,42px)/1.1 'Schibsted Grotesk';letter-spacing:-0.03em;color:#F4F6F2">Small sessions, stacked over time.</h2>
+          <h2 style="font:600 clamp(24px,4vw,42px)/1.1 'Schibsted Grotesk';letter-spacing:-0.03em;color:#F4F6F2">Small sessions, stacked over time.</h2>
           <p style="font:400 17px/1.6 'Schibsted Grotesk';color:#94998f;margin-top:14px">Streaks, monthly insights, goals, and full session history — all in one view.</p>
         </div>
 
-        <div style="position:relative;border-radius:22px;overflow:hidden;background:#1a1c1a;border:1px solid rgba(255,255,255,0.1);box-shadow:0 70px 120px -40px rgba(0,0,0,0.85);padding:30px">
+        <div class="panel" style="position:relative;border-radius:22px;overflow:hidden;background:#1a1c1a;border:1px solid rgba(255,255,255,0.1);box-shadow:0 70px 120px -40px rgba(0,0,0,0.85);padding:30px">
           <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:26px;flex-wrap:wrap;gap:14px">
             <div>
               <div style="width:11px;height:11px;border-radius:50%;background:#e05d4c;margin-bottom:16px"></div>
@@ -249,10 +300,10 @@
             </div>
           </div>
 
-          <div style="display:grid;grid-template-columns:1fr 1.35fr;gap:16px;align-items:start">
+          <div class="g2s" style="display:grid;grid-template-columns:1fr 1.35fr;gap:16px;align-items:start">
             <!-- LEFT COLUMN -->
             <div style="display:flex;flex-direction:column;gap:16px">
-              <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+              <div class="g2n" style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
                 <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:20px">
                   <div style="width:30px;height:30px;border-radius:9px;background:rgba(224,150,60,0.18);display:flex;align-items:center;justify-content:center;margin-bottom:20px">
                     <div style="width:11px;height:11px;border-radius:50% 50% 50% 2px;background:#e0963c;transform:rotate(-45deg)"></div>
@@ -316,7 +367,7 @@
                   <div><div style="font:600 26px 'Schibsted Grotesk';color:#F4F6F2">50m</div><div style="font:400 12.5px 'Schibsted Grotesk';color:#8f938a;margin-top:2px">today</div></div>
                   <div><div style="font:600 26px 'Schibsted Grotesk';color:#F4F6F2">32h 50m</div><div style="font:400 12.5px 'Schibsted Grotesk';color:#8f938a;margin-top:2px">this month</div></div>
                 </div>
-                <div style="display:flex;align-items:flex-end;gap:5px;height:110px;padding-left:2px">
+                <div class="bars" style="display:flex;align-items:flex-end;gap:5px;height:110px;padding-left:2px">
                   {{ insightBars }}
                 </div>
                 <div style="display:flex;justify-content:space-between;margin-top:8px;font:400 11.5px 'JetBrains Mono';color:#6f726a">
@@ -324,7 +375,7 @@
                 </div>
               </div>
 
-              <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+              <div class="g2ring" style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
                 <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:22px">
                   <div style="display:flex;align-items:center;gap:9px;font:600 15px 'Schibsted Grotesk';color:#F1F3EF;margin-bottom:20px">
                     <div style="width:12px;height:12px;border-radius:50%;border:2px solid #5b8fd6"></div>
@@ -368,23 +419,23 @@
 
     <!-- ACCOUNTABILITY -->
     <section style="padding:96px 30px 100px">
-      <div class="rv" style="max-width:1140px;margin:0 auto;background:radial-gradient(700px 420px at 50% 120%, rgba(74,157,91,0.16), transparent 70%);border:1px solid rgba(255,255,255,0.08);border-radius:28px;padding:64px 40px;text-align:center;overflow:hidden">
+      <div class="rv card" style="max-width:1140px;margin:0 auto;background:radial-gradient(700px 420px at 50% 120%, rgba(74,157,91,0.16), transparent 70%);border:1px solid rgba(255,255,255,0.08);border-radius:28px;padding:64px 40px;text-align:center;overflow:hidden">
         <div style="font:600 12px 'JetBrains Mono';letter-spacing:0.16em;color:#7d8079;margin-bottom:20px">ACCOUNTABILITY</div>
-        <h2 style="font:600 clamp(36px,5.5vw,58px)/1.04 'Schibsted Grotesk';letter-spacing:-0.035em;color:#F4F6F2">Don't break the chain.</h2>
+        <h2 style="font:600 clamp(28px,5.5vw,58px)/1.04 'Schibsted Grotesk';letter-spacing:-0.035em;color:#F4F6F2">Don't break the chain.</h2>
         <p style="font:400 clamp(16px,1.8vw,19px)/1.55 'Schibsted Grotesk';color:#9ea29a;max-width:500px;margin:22px auto 40px">Consistency beats intensity. When every day is a square and every square is a session, showing up becomes the easy choice.</p>
-        <div style="display:inline-block;padding:20px;background:rgba(11,13,11,0.7);border:1px solid rgba(255,255,255,0.09);border-radius:20px;overflow:hidden;max-width:92vw">{{ accountWidget }}</div>
+        <div style="display:inline-block;padding:20px;background:rgba(11,13,11,0.7);border:1px solid rgba(255,255,255,0.09);border-radius:20px;overflow:hidden;max-width:100%">{{ accountWidget }}</div>
       </div>
     </section>
 
     <!-- SIGNATURE SCROLL-FILL WIDGET -->
     <section data-sig="1" style="position:relative;height:230vh;margin-bottom:20px">
-      <div style="position:sticky;top:0;height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;background:radial-gradient(900px 500px at 50% 50%, rgba(74,157,91,0.07), transparent 72%)">
+      <div style="position:sticky;top:0;height:100svh;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;background:radial-gradient(900px 500px at 50% 50%, rgba(74,157,91,0.07), transparent 72%)">
         <div style="font:600 12px 'JetBrains Mono';letter-spacing:0.16em;color:#7d8079;margin-bottom:14px">A YEAR OF SHOWING UP</div>
         <div style="display:flex;align-items:baseline;gap:14px;margin-bottom:34px">
-          <span style="font:600 clamp(56px,10vw,108px)/0.9 'Schibsted Grotesk';letter-spacing:-0.05em;color:#F4F6F2;font-variant-numeric:tabular-nums">{{ dayCount }}</span>
+          <span style="font:600 clamp(44px,10vw,108px)/0.9 'Schibsted Grotesk';letter-spacing:-0.05em;color:#F4F6F2;font-variant-numeric:tabular-nums">{{ dayCount }}</span>
           <span style="font:500 clamp(18px,2.4vw,26px) 'Schibsted Grotesk';color:#71746d">days</span>
         </div>
-        <div class="nobar" style="width:100%;display:flex;justify-content:center;padding:0 20px;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none">{{ signature }}</div>
+        <div class="nobar" style="width:100%;display:flex;justify-content:safe center;padding:0 20px;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none">{{ signature }}</div>
         <div style="font:400 15px 'Schibsted Grotesk';color:#94998f;margin-top:30px">This is what 1% a day looks like.</div>
       </div>
     </section>
@@ -395,7 +446,7 @@
         <div style="position:absolute;inset:0;background:radial-gradient(620px 380px at 50% 120%, rgba(74,157,91,0.24), transparent 68%), radial-gradient(520px 360px at 18% -10%, rgba(126,88,194,0.12), transparent 70%)"></div>
         <div style="position:relative">
           {{ iconCta }}
-          <h2 style="font:600 clamp(34px,5vw,54px)/1.04 'Schibsted Grotesk';letter-spacing:-0.035em;color:#F4F6F2;max-width:640px;margin:0 auto">Get 1% better, every day.</h2>
+          <h2 style="font:600 clamp(28px,5vw,54px)/1.04 'Schibsted Grotesk';letter-spacing:-0.035em;color:#F4F6F2;max-width:640px;margin:0 auto">Get 1% better, every day.</h2>
           <p style="font:400 18px/1.55 'Schibsted Grotesk';color:#9ea29a;max-width:440px;margin:20px auto 32px">Start your first session in the next thirty seconds.</p>
           <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
             <div style="font:600 15px 'Schibsted Grotesk';color:#0B0D0B;background:#F1F3EF;padding:15px 28px;border-radius:12px;cursor:pointer" style-hover="background:#ffffff;transform:translateY(-1px)">Coming Soon</div>
@@ -411,14 +462,14 @@
 
   <!-- ================= FEATURES ================= -->
   <sc-if value="{{ isFeatures }}">
-  <div style="padding:80px 30px 110px">
+  <div class="sec" style="padding:80px 30px 110px">
     <div style="max-width:1140px;margin:0 auto">
       <div class="rv" style="text-align:center;margin-bottom:64px">
         <div style="font:600 12px 'JetBrains Mono';letter-spacing:0.16em;color:#7d8079;margin-bottom:18px">FEATURES</div>
-        <h1 style="font:600 clamp(40px,6vw,64px)/1.02 'Schibsted Grotesk';letter-spacing:-0.04em;color:#F4F6F2">Everything Deepflow does.<br>Nothing it shouldn't.</h1>
+        <h1 style="font:600 clamp(32px,6vw,64px)/1.02 'Schibsted Grotesk';letter-spacing:-0.04em;color:#F4F6F2">Everything Deepflow does.<br>Nothing it shouldn't.</h1>
         <p style="font:400 18px/1.55 'Schibsted Grotesk';color:#9ea29a;max-width:520px;margin:22px auto 0">A focus timer designed to disappear — and a habit tracker designed to keep you honest.</p>
       </div>
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
+      <div class="g3" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
         {{ featureCards }}
       </div>
       <div class="rv" style="margin-top:64px;text-align:center">
@@ -430,12 +481,12 @@
 
   <!-- ================= PRICING ================= -->
   <sc-if value="{{ isPricing }}">
-  <div style="padding:80px 30px 110px;position:relative;overflow:hidden">
+  <div class="sec" style="padding:80px 30px 110px;position:relative;overflow:hidden">
     <div style="position:absolute;inset:0;background:radial-gradient(640px 420px at 50% -6%, rgba(74,157,91,0.12), transparent 70%)"></div>
     <div style="position:relative;max-width:1000px;margin:0 auto">
       <div class="rv" style="text-align:center;margin-bottom:48px">
         <div style="font:600 12px 'JetBrains Mono';letter-spacing:0.16em;color:#7d8079;margin-bottom:18px">PRICING</div>
-        <h1 style="font:600 clamp(40px,6vw,60px)/1.02 'Schibsted Grotesk';letter-spacing:-0.04em;color:#F4F6F2">Stay focused.<br>Start free.</h1>
+        <h1 style="font:600 clamp(32px,6vw,60px)/1.02 'Schibsted Grotesk';letter-spacing:-0.04em;color:#F4F6F2">Stay focused.<br>Start free.</h1>
         <p style="font:400 18px/1.55 'Schibsted Grotesk';color:#9ea29a;max-width:480px;margin:22px auto 0">The base timer is free forever. Upgrade to Pro for the full habit toolkit — less than a coffee a month.</p>
       </div>
 
@@ -448,7 +499,7 @@
       </div>
 
       <!-- plan cards -->
-      <div class="rv" style="display:grid;grid-template-columns:1fr 1.15fr;gap:18px;align-items:stretch">
+      <div class="rv g2p" style="display:grid;grid-template-columns:1fr 1.15fr;gap:18px;align-items:stretch">
         <div style="position:relative;order:2;background:rgba(255,255,255,0.03);border:1px solid rgba(74,157,91,0.4);border-radius:26px;padding:38px;overflow:hidden">
           <div style="position:absolute;inset:0;background:radial-gradient(420px 280px at 110% -10%, rgba(74,157,91,0.16), transparent 70%)"></div>
           <div style="position:relative">
@@ -457,7 +508,7 @@
               <span style="font:600 19px 'Schibsted Grotesk';color:#F1F3EF">Deepflow Pro</span>
             </div>
             <div style="display:flex;align-items:baseline;gap:8px">
-              <span style="font:600 clamp(46px,7vw,64px)/1 'Schibsted Grotesk';letter-spacing:-0.04em;color:#F4F6F2">{{ price }}</span>
+              <span style="font:600 clamp(38px,7vw,64px)/1 'Schibsted Grotesk';letter-spacing:-0.04em;color:#F4F6F2">{{ price }}</span>
               <span style="font:500 18px 'Schibsted Grotesk';color:#71746d">{{ priceUnit }}</span>
             </div>
             <div style="font:500 13px 'JetBrains Mono';color:#7d8079;margin-top:8px">{{ priceSub }}</div>
@@ -475,7 +526,7 @@
         <div style="order:1;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.08);border-radius:26px;padding:38px;display:flex;flex-direction:column">
           <span style="font:600 19px 'Schibsted Grotesk';color:#F1F3EF;margin-bottom:18px">Free</span>
           <div style="display:flex;align-items:baseline;gap:8px">
-            <span style="font:600 clamp(46px,7vw,64px)/1 'Schibsted Grotesk';letter-spacing:-0.04em;color:#F4F6F2">$0</span>
+            <span style="font:600 clamp(38px,7vw,64px)/1 'Schibsted Grotesk';letter-spacing:-0.04em;color:#F4F6F2">$0</span>
             <span style="font:500 18px 'Schibsted Grotesk';color:#71746d">forever</span>
           </div>
           <div style="font:500 13px 'JetBrains Mono';color:#7d8079;margin-top:8px">The base timer — yours for good</div>
@@ -502,7 +553,7 @@
       <div class="rv" style="max-width:760px;margin:0 auto;text-align:center">
         {{ iconAbout }}
         <div style="font:600 12px 'JetBrains Mono';letter-spacing:0.16em;color:#7d8079;margin-bottom:20px">ABOUT</div>
-        <h1 style="font:600 clamp(36px,5.5vw,56px)/1.05 'Schibsted Grotesk';letter-spacing:-0.035em;color:#F4F6F2">Deep work, made into a daily habit.</h1>
+        <h1 style="font:600 clamp(28px,5.5vw,56px)/1.05 'Schibsted Grotesk';letter-spacing:-0.035em;color:#F4F6F2">Deep work, made into a daily habit.</h1>
       </div>
     </section>
     <section style="padding:0 30px 80px">
@@ -514,7 +565,7 @@
     <section style="background:#ECECE5;padding:90px 30px">
       <div class="rv" style="max-width:680px;margin:0 auto">
         <div style="font:600 12px 'JetBrains Mono';letter-spacing:0.16em;color:#8a8c82;margin-bottom:18px">DESIGN ETHOS</div>
-        <h2 style="font:600 clamp(28px,4vw,40px)/1.1 'Schibsted Grotesk';letter-spacing:-0.03em;color:#16181a;margin-bottom:18px">It's designed to disappear.</h2>
+        <h2 style="font:600 clamp(24px,4vw,40px)/1.1 'Schibsted Grotesk';letter-spacing:-0.03em;color:#16181a;margin-bottom:18px">It's designed to disappear.</h2>
         <p style="font:400 18px/1.7 'Schibsted Grotesk';color:#55584f">No Dock icon. No window to manage. No account to make. Deepflow lives in your menu bar and gets out of the way — because the best tool for deep work is the one you forget is even there. The only thing it asks of you is that you show up.</p>
       </div>
     </section>
@@ -567,7 +618,7 @@
 </x-dc>
 <script type="text/x-dc" data-dc-script>
 class Component extends DCLogic {
-  state = { icon:'', route:'home', fill:0, billing:'annual' };
+  state = { icon:'', route:'home', fill:0, billing:'annual', vw: (typeof window!=='undefined' ? window.innerWidth : 1440) };
 
   rootRef = (n)=>{ if(n) this._root = n; };
   sigRef = (n)=>{ if(n) this._sig = n; };
@@ -579,11 +630,19 @@ class Component extends DCLogic {
     if(this.reduce) this.setState({fill:1});
     this._onScroll = ()=>{ if(this._raf) return; this._raf = requestAnimationFrame(()=>{ this._raf=0; this.updateFill(); this.sweep(); }); };
     window.addEventListener('scroll', this._onScroll, {passive:true});
+    // 8px deadband: mobile Safari fires resize on every URL-bar nudge
+    this._onResize = ()=>{ if(this._rafW) return; this._rafW = requestAnimationFrame(()=>{
+      this._rafW = 0;
+      const w = window.innerWidth;
+      if(Math.abs(w - this.state.vw) > 8) this.setState({vw:w}, ()=>this.updateFill());
+    }); };
+    window.addEventListener('resize', this._onResize, {passive:true});
     this.updateFill();
     this.afterRender();
   }
   componentWillUnmount(){
     window.removeEventListener('scroll', this._onScroll);
+    window.removeEventListener('resize', this._onResize);
   }
   afterRender(){
     // run a few sweeps as fonts/layout settle so nothing stays hidden
@@ -651,15 +710,37 @@ class Component extends DCLogic {
     this._pc[key] = data;
     return data;
   }
+  // Fit a fixed-column grid into the viewport by shrinking the cell, never the
+  // column count. Keeping cols constant keeps pattern()'s cache key stable, so
+  // the artwork doesn't regenerate (and visibly pop) as you resize.
+  // gap scales with size to preserve the designed ratio.
+  // Returns the design's own maxSize once there's room, so wide viewports render
+  // byte-identically to before this existed.
+  fitCell(cols, maxSize, gap, pad){
+    const ratio = gap/maxSize;
+    const avail = Math.max(120, (this.state.vw || 1440) - (pad||40));
+    const size = Math.min(maxSize, Math.floor((avail/(cols + (cols-1)*ratio))*2)/2);
+    return { size, gap: Math.round(size*ratio*100)/100 };
+  }
   staticGrid(cols, opt){
     opt = opt||{};
-    const rows=7, size=opt.size||14, gap=opt.gap||4, radius=opt.radius||3.5, density=opt.density||0.45, seed=opt.seed||1, empty='#171a17';
+    const rows=7, radius=opt.radius||3.5, density=opt.density||0.45, seed=opt.seed||1, empty='#171a17';
+    // pad = the horizontal chrome between viewport and this grid's box at the
+    // narrowest breakpoint. Only matters below ~700px; above that every grid
+    // hits maxSize and pad is irrelevant.
+    const fit = this.fitCell(cols, opt.size||14, opt.gap||4, opt.pad||72);
+    const size = fit.size, gap = fit.gap;
     const data = this.pattern(cols, rows, density, seed+1000);
     const cells = data.map((d,i)=>React.createElement('div',{key:i,style:{width:size+'px',height:size+'px',borderRadius:radius+'px',background:d.on?d.col:empty}}));
     return React.createElement('div',{style:{display:'grid',gridTemplateRows:`repeat(${rows}, ${size}px)`,gridAutoFlow:'column',gridAutoColumns:`${size}px`,gap:gap+'px'}}, cells);
   }
   signatureGrid(){
-    const cols=53, rows=7, size=18, gap=5, radius=4;
+    const cols=53, rows=7, radius=4;
+    // pad mirrors the CSS: the .nobar container always insets 20px a side, and
+    // below 560 the section rule adds another 18. Must stay 40 above 560 or a
+    // 1280px laptop would compute 17.5px cells instead of the design's 18.
+    const fit = this.fitCell(cols, 18, 5, (this.state.vw||1440) <= 560 ? 76 : 40);
+    const size = fit.size, gap = fit.gap;
     const fill = this.reduce ? 1 : this.state.fill;
     const revealed = Math.round(fill*cols);
     const data = this.pattern(cols, rows, 0.5, 2000);
@@ -766,9 +847,11 @@ class Component extends DCLogic {
       goAbout: ()=>this.nav('about'),
       seeHow: ()=>this.scrollTo('#how'),
       download: ()=>{ if(this.state.route!=='home'){ this.nav('home'); setTimeout(()=>this.scrollTo('#download'),80); } else this.scrollTo('#download'); },
-      heroWidget: this.staticGrid(28, {seed:3, size:16, gap:5, density:0.42}),
-      accountWidget: this.staticGrid(30, {seed:9, size:15, gap:4.5, density:0.46}),
-      miniWidget: this.staticGrid(7, {seed:7, size:11, gap:3.5, density:0.42}),
+      // pad: section 36 + container 40 = 76
+      heroWidget: this.staticGrid(28, {seed:3, size:16, gap:5, density:0.42, pad:76}),
+      // pad: section 36 + card 40 + container 40 = 116
+      accountWidget: this.staticGrid(30, {seed:9, size:15, gap:4.5, density:0.46, pad:120}),
+      miniWidget: this.staticGrid(7, {seed:7, size:11, gap:3.5, density:0.42, pad:76}),
       signature: this.signatureGrid(),
       dayCount: Math.round(fill*365),
       featureCards: this.featureCards(),
