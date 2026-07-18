@@ -272,7 +272,7 @@
             <div style="width:9px;height:9px;border-radius:50%;background:{{ pillDotBg }};box-shadow:{{ pillDotGlow }}"></div>
             <span ref="{{ pillTimeRef }}" style="font:500 22px 'Schibsted Grotesk';letter-spacing:-0.01em;color:#F4F6F2;font-variant-numeric:tabular-nums">{{ pillTime }}</span>
             <div style="width:1px;height:18px;background:rgba(255,255,255,0.12)"></div>
-            <span onClick="{{ pillToggle }}" onKeyDown="{{ pillKey }}" tabIndex="0" role="button" aria-label="{{ pillLabel }}" style="font:600 13px 'JetBrains Mono';color:#c7cabf;cursor:pointer;user-select:none;-webkit-user-select:none;-webkit-tap-highlight-color:transparent;padding:2px 4px;border-radius:6px;outline:none" style-hover="color:#F1F3EF" style-focus-visible="box-shadow:0 0 0 2px rgba(74,157,91,0.4)">{{ pillGlyph }}</span>
+            <span onClick="{{ pillToggle }}" onKeyDown="{{ pillKey }}" tabIndex="0" role="button" aria-label="{{ pillLabel }}" style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;color:#c7cabf;cursor:pointer;user-select:none;-webkit-user-select:none;-webkit-tap-highlight-color:transparent;border-radius:6px;outline:none" style-hover="color:#F1F3EF" style-focus-visible="box-shadow:0 0 0 2px rgba(74,157,91,0.4)">{{ pillIcon }}</span>
           </div>
         </div>
         <div class="rv" style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.08);border-radius:22px;padding:34px;display:flex;flex-direction:column;justify-content:space-between;min-height:300px">
@@ -649,6 +649,18 @@ class Component extends DCLogic {
   root(){ return this._root || document; }
 
   fmtClock(s){ s=Math.max(0,s|0); return (s/60|0)+':'+('0'+(s%60)).slice(-2); }
+  // Pause/play drawn as CSS shapes, not glyphs. The ⏸ char (U+23F8) has emoji
+  // presentation on Apple platforms, so iOS rendered it as a color emoji; shapes
+  // are identical everywhere. currentColor makes them follow the button's hover.
+  pillIconEl(running){
+    if(running){
+      const bar={width:'3px',height:'11px',background:'currentColor',borderRadius:'1px'};
+      return React.createElement('span',{style:{display:'inline-flex',gap:'3px',alignItems:'center'}},
+        React.createElement('span',{key:'a',style:bar}), React.createElement('span',{key:'b',style:bar}));
+    }
+    return React.createElement('span',{style:{display:'inline-block',width:'0',height:'0',
+      borderStyle:'solid',borderWidth:'6px 0 6px 10px',borderColor:'transparent transparent transparent currentColor'}});
+  }
   tickPill(){
     if(!this.state.pillRunning || this._pillLeft<=0) return;
     if(!this._pillEl) return;                 // not mounted (off the home route) — hold
@@ -909,7 +921,7 @@ class Component extends DCLogic {
       rootRef: this.rootRef, sigRef: this.sigRef,
       vol: this.state.vol, volRef: this.volRef, volDown: this.volDown, volMove: this.volMove, volUp: this.volUp, volKey: this.volKey,
       pillTime: this.fmtClock(this._pillLeft), pillTimeRef: this.pillTimeRef, pillToggle: this.pillToggle, pillKey: this.pillKey,
-      pillGlyph: this.state.pillRunning ? '⏸' : '▶',
+      pillIcon: this.pillIconEl(this.state.pillRunning),
       pillLabel: this.state.pillRunning ? 'Pause timer' : 'Start timer',
       pillDotBg: this.state.pillRunning ? '#4A9D5B' : '#5c5f57',
       pillDotGlow: this.state.pillRunning ? '0 0 10px #4A9D5B' : 'none',
