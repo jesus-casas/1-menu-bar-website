@@ -283,7 +283,7 @@
           </div>
           <div style="display:flex;align-items:center;gap:14px">
             <span style="font:600 13px 'JetBrains Mono';color:#9a9d95">VOL</span>
-            <div ref="{{ volRef }}" onPointerDown="{{ volDown }}" onPointerMove="{{ volMove }}" onPointerUp="{{ volUp }}" onKeyDown="{{ volKey }}" tabIndex="0" role="slider" aria-label="Alarm volume" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ vol }}" style="flex:1;padding:11px 0;position:relative;cursor:pointer;touch-action:none;outline:none;border-radius:6px" style-focus="box-shadow:0 0 0 3px rgba(74,157,91,0.35)">
+            <div ref="{{ volRef }}" onPointerDown="{{ volDown }}" onPointerMove="{{ volMove }}" onPointerUp="{{ volUp }}" onKeyDown="{{ volKey }}" tabIndex="0" role="slider" aria-label="Alarm volume" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ vol }}" style="flex:1;padding:11px 0;position:relative;cursor:pointer;touch-action:none;outline:none;border-radius:6px;-webkit-tap-highlight-color:transparent" style-focus-visible="box-shadow:0 0 0 3px rgba(74,157,91,0.35)">
               <div style="height:6px;border-radius:6px;background:rgba(255,255,255,0.08);position:relative">
                 <div style="position:absolute;left:0;top:0;bottom:0;width:{{ vol }}%;border-radius:6px;background:#4A9D5B"></div>
                 <div style="position:absolute;left:{{ vol }}%;top:50%;transform:translate(-50%,-50%);width:16px;height:16px;border-radius:50%;background:#F1F3EF;box-shadow:0 2px 6px rgba(0,0,0,0.5)"></div>
