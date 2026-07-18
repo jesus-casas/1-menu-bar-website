@@ -269,10 +269,10 @@
             <p style="font:400 15.5px/1.6 'Schibsted Grotesk';color:#94998f;margin-top:10px;max-width:360px">Keep the countdown hovering over everything — a glanceable nudge that you're on the clock.</p>
           </div>
           <div style="display:flex;align-items:center;gap:12px;align-self:flex-start;background:rgba(20,23,20,0.95);border:1px solid rgba(255,255,255,0.1);border-radius:999px;padding:10px 16px;box-shadow:0 30px 50px -24px rgba(0,0,0,0.8)">
-            <div style="width:9px;height:9px;border-radius:50%;background:#4A9D5B;box-shadow:0 0 10px #4A9D5B"></div>
-            <span style="font:500 22px 'Schibsted Grotesk';letter-spacing:-0.01em;color:#F4F6F2">12:48</span>
+            <div style="width:9px;height:9px;border-radius:50%;background:{{ pillDotBg }};box-shadow:{{ pillDotGlow }}"></div>
+            <span ref="{{ pillTimeRef }}" style="font:500 22px 'Schibsted Grotesk';letter-spacing:-0.01em;color:#F4F6F2;font-variant-numeric:tabular-nums">{{ pillTime }}</span>
             <div style="width:1px;height:18px;background:rgba(255,255,255,0.12)"></div>
-            <span style="font:600 13px 'JetBrains Mono';color:#9a9d95">⏸</span>
+            <span onClick="{{ pillToggle }}" onKeyDown="{{ pillKey }}" tabIndex="0" role="button" aria-label="{{ pillLabel }}" style="font:600 13px 'JetBrains Mono';color:#c7cabf;cursor:pointer;user-select:none;-webkit-user-select:none;-webkit-tap-highlight-color:transparent;padding:2px 4px;border-radius:6px;outline:none" style-hover="color:#F1F3EF" style-focus-visible="box-shadow:0 0 0 2px rgba(74,157,91,0.4)">{{ pillGlyph }}</span>
           </div>
         </div>
         <div class="rv" style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.08);border-radius:22px;padding:34px;display:flex;flex-direction:column;justify-content:space-between;min-height:300px">
@@ -634,11 +634,37 @@
 </x-dc>
 <script type="text/x-dc" data-dc-script>
 class Component extends DCLogic {
-  state = { icon:'', route:'home', fill:0, billing:'annual', vol:62, vw: (typeof window!=='undefined' ? window.innerWidth : 1440) };
+  state = { icon:'', route:'home', fill:0, billing:'annual', vol:62, pillRunning:true, vw: (typeof window!=='undefined' ? window.innerWidth : 1440) };
+
+  // Floating-pill countdown. The value lives in an instance var, NOT state, and
+  // the per-second tick writes the display node's textContent directly through a
+  // ref — no setState, so it triggers ZERO re-renders (this framework re-renders
+  // the whole page on any setState). render() reads the same instance var, so any
+  // incidental re-render (scroll, toggle) still shows the correct time.
+  _pillLeft = 768; // 12:48
 
   rootRef = (n)=>{ if(n) this._root = n; };
   sigRef = (n)=>{ if(n) this._sig = n; };
+  pillTimeRef = (n)=>{ this._pillEl = n || null; };
   root(){ return this._root || document; }
+
+  fmtClock(s){ s=Math.max(0,s|0); return (s/60|0)+':'+('0'+(s%60)).slice(-2); }
+  tickPill(){
+    if(!this.state.pillRunning || this._pillLeft<=0) return;
+    if(!this._pillEl) return;                 // not mounted (off the home route) — hold
+    this._pillLeft--;
+    this._pillEl.textContent = this.fmtClock(this._pillLeft);
+    if(this._pillLeft===0) this.setState({pillRunning:false});   // one re-render at 00:00
+  }
+  pillToggle = ()=>{
+    const running = this.state.pillRunning;
+    if(!running && this._pillLeft<=0){        // restart from a finished timer
+      this._pillLeft = 768;
+      if(this._pillEl) this._pillEl.textContent = this.fmtClock(768);
+    }
+    this.setState({pillRunning:!running});     // toggle re-renders once (on click, fine)
+  };
+  pillKey = (e)=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); this.pillToggle(); } };
 
   // Slidable alarm-volume control. The track is measured from its own rect, so
   // pointer x maps to 0-100. Move is rAF-throttled to one update per frame,
@@ -676,12 +702,14 @@ class Component extends DCLogic {
       if(Math.abs(w - this.state.vw) > 8) this.setState({vw:w}, ()=>this.updateFill());
     }); };
     window.addEventListener('resize', this._onResize, {passive:true});
+    this._pillIv = setInterval(()=>this.tickPill(), 1000);
     this.updateFill();
     this.afterRender();
   }
   componentWillUnmount(){
     window.removeEventListener('scroll', this._onScroll);
     window.removeEventListener('resize', this._onResize);
+    clearInterval(this._pillIv);
   }
   afterRender(){
     // run a few sweeps as fonts/layout settle so nothing stays hidden
@@ -880,6 +908,11 @@ class Component extends DCLogic {
       iconFooter: this.iconEl(24),
       rootRef: this.rootRef, sigRef: this.sigRef,
       vol: this.state.vol, volRef: this.volRef, volDown: this.volDown, volMove: this.volMove, volUp: this.volUp, volKey: this.volKey,
+      pillTime: this.fmtClock(this._pillLeft), pillTimeRef: this.pillTimeRef, pillToggle: this.pillToggle, pillKey: this.pillKey,
+      pillGlyph: this.state.pillRunning ? '⏸' : '▶',
+      pillLabel: this.state.pillRunning ? 'Pause timer' : 'Start timer',
+      pillDotBg: this.state.pillRunning ? '#4A9D5B' : '#5c5f57',
+      pillDotGlow: this.state.pillRunning ? '0 0 10px #4A9D5B' : 'none',
       isHome: r==='home', isFeatures: r==='features', isPricing: r==='pricing', isAbout: r==='about',
       goHome: ()=>this.nav('home'),
       goFeatures: ()=>this.nav('features'),
