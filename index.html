@@ -283,9 +283,11 @@
           </div>
           <div style="display:flex;align-items:center;gap:14px">
             <span style="font:600 13px 'JetBrains Mono';color:#9a9d95">VOL</span>
-            <div style="flex:1;height:6px;border-radius:6px;background:rgba(255,255,255,0.08);position:relative">
-              <div style="position:absolute;left:0;top:0;bottom:0;width:62%;border-radius:6px;background:#4A9D5B"></div>
-              <div style="position:absolute;left:62%;top:50%;transform:translate(-50%,-50%);width:16px;height:16px;border-radius:50%;background:#F1F3EF;box-shadow:0 2px 6px rgba(0,0,0,0.5)"></div>
+            <div ref="{{ volRef }}" onPointerDown="{{ volDown }}" onPointerMove="{{ volMove }}" onPointerUp="{{ volUp }}" onKeyDown="{{ volKey }}" tabIndex="0" role="slider" aria-label="Alarm volume" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ vol }}" style="flex:1;padding:11px 0;position:relative;cursor:pointer;touch-action:none;outline:none;border-radius:6px" style-focus="box-shadow:0 0 0 3px rgba(74,157,91,0.35)">
+              <div style="height:6px;border-radius:6px;background:rgba(255,255,255,0.08);position:relative">
+                <div style="position:absolute;left:0;top:0;bottom:0;width:{{ vol }}%;border-radius:6px;background:#4A9D5B"></div>
+                <div style="position:absolute;left:{{ vol }}%;top:50%;transform:translate(-50%,-50%);width:16px;height:16px;border-radius:50%;background:#F1F3EF;box-shadow:0 2px 6px rgba(0,0,0,0.5)"></div>
+              </div>
             </div>
           </div>
         </div>
@@ -632,11 +634,34 @@
 </x-dc>
 <script type="text/x-dc" data-dc-script>
 class Component extends DCLogic {
-  state = { icon:'', route:'home', fill:0, billing:'annual', vw: (typeof window!=='undefined' ? window.innerWidth : 1440) };
+  state = { icon:'', route:'home', fill:0, billing:'annual', vol:62, vw: (typeof window!=='undefined' ? window.innerWidth : 1440) };
 
   rootRef = (n)=>{ if(n) this._root = n; };
   sigRef = (n)=>{ if(n) this._sig = n; };
   root(){ return this._root || document; }
+
+  // Slidable alarm-volume control. The track is measured from its own rect, so
+  // pointer x maps to 0-100. Move is rAF-throttled to one update per frame,
+  // mirroring the scroll handler; pointer capture keeps the drag alive when the
+  // cursor leaves the thin bar.
+  volRef = (n)=>{ if(n) this._volTrack = n; };
+  volFromX(clientX){
+    const el = this._volTrack; if(!el) return;
+    const r = el.getBoundingClientRect(); if(r.width<=0) return;
+    const pct = Math.max(0, Math.min(100, Math.round((clientX - r.left)/r.width*100)));
+    if(pct !== this.state.vol) this.setState({vol:pct});
+  }
+  volDown = (e)=>{ this._volDrag = true; try{ e.currentTarget.setPointerCapture(e.pointerId); }catch(_){} this.volFromX(e.clientX); e.preventDefault(); };
+  volMove = (e)=>{ if(!this._volDrag) return; this._volX = e.clientX; if(this._volRaf) return; this._volRaf = requestAnimationFrame(()=>{ this._volRaf=0; this.volFromX(this._volX); }); };
+  volUp = (e)=>{ this._volDrag = false; try{ e.currentTarget.releasePointerCapture(e.pointerId); }catch(_){} };
+  volKey = (e)=>{
+    let v = this.state.vol;
+    if(e.key==='ArrowLeft'||e.key==='ArrowDown') v-=5;
+    else if(e.key==='ArrowRight'||e.key==='ArrowUp') v+=5;
+    else if(e.key==='Home') v=0; else if(e.key==='End') v=100; else return;
+    e.preventDefault();
+    this.setState({vol:Math.max(0,Math.min(100,v))});
+  };
 
   componentDidMount(){
     import('./deepflow-asset.js').then(m=>this.setState({icon:m.DEEPFLOW_ICON})).catch(()=>{});
@@ -854,6 +879,7 @@ class Component extends DCLogic {
       iconAbout: this.iconEl(64, {marginBottom:'28px'}),
       iconFooter: this.iconEl(24),
       rootRef: this.rootRef, sigRef: this.sigRef,
+      vol: this.state.vol, volRef: this.volRef, volDown: this.volDown, volMove: this.volMove, volUp: this.volUp, volKey: this.volKey,
       isHome: r==='home', isFeatures: r==='features', isPricing: r==='pricing', isAbout: r==='about',
       goHome: ()=>this.nav('home'),
       goFeatures: ()=>this.nav('features'),
