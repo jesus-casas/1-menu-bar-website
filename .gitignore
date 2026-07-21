@@ -1,3 +1,6 @@
 # macOS
 .DS_Store
 **/.DS_Store
+
+# local-only handoff notes (never deploy to the live site)
+handoff.md
