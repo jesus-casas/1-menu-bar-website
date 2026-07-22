@@ -1,9 +1,9 @@
 # Deepflow — Session Handoff
 
-_Last updated: 2026-07-20_
+_Last updated: 2026-07-21_
 
-Two independent tracks of work were done in this session. Track 1 is merged to `main`;
-Track 2 lives on its own branch and is intentionally **not** for `main`.
+Three areas of work this session. Tracks 1 and 3 are merged to `main` and live; Track 2 lives on
+its own branch and is intentionally **not** for `main`.
 
 > Repo layout: the live site deploys from the **`docs/`** folder (GitHub Pages → `main` → `/docs`).
 > This file and `README.md` live at the **repo root**, which is *not* served — so they are tracked in
@@ -69,11 +69,11 @@ recrawl of the homepage; it controls the timing. Rough expectation, assuming you
 take longer, and it ultimately decides whether to display a given favicon/site name.
 
 ### Post-deploy checklist (to speed Google up)
-1. In **Google Search Console**, verify the `deepflowfocus.com` property (no verification file/meta
-   tag is in the repo yet — ask if you want one added).
-2. Submit `https://deepflowfocus.com/sitemap.xml`.
-3. Use **URL Inspection → Request Indexing** on `https://deepflowfocus.com/`.
-4. Validate the structured data live with the **Rich Results Test** / **Schema Markup Validator**.
+1. ✅ **Done** — `sitemap.xml` submitted in **Google Search Console**; returned **Success** (4 URLs).
+2. **Remaining:** URL Inspection → **Request Indexing** on `https://deepflowfocus.com/` — this is
+   what pulls in the new favicon + site name fastest.
+3. Optional: validate the structured data live with the **Rich Results Test** / **Schema Markup
+   Validator**. (No Search Console verification file/meta tag is in the repo yet — ask if you want one.)
 
 ### Known trade-off (not addressed, by request)
 The brand favicon is two-tone on a transparent background (near-black top triangle, light-gray
@@ -97,6 +97,43 @@ Built three App Store screenshots at **2880×1800** from the exact UI code in `i
   1440×900 scene in headless Chrome at 2× → exact 2880×1800, and asserts dimensions with `sips`).
 - **Note:** there is no native macOS app in this repo; the screenshots recreate the app UI in
   HTML/CSS, which is why they can render razor-sharp at any resolution.
+
+---
+
+## Track 3 — Serve site from `docs/` (merged to `main`)
+
+### Why
+`README.md` and `handoff.md` are developer-onboarding docs that shouldn't be on the public site,
+but GitHub Pages serves *every* tracked file at the domain root. Jekyll's exclude list can't be used
+safely here (the homepage's `{{ }}` template syntax would be mangled by Liquid), so the fix is to
+deploy from a subfolder — root-level dev docs then stay tracked but unserved.
+
+### What changed
+- Moved all published files into **`docs/`** (via `git mv`, history preserved): the HTML pages,
+  `support.js`, `deepflow-asset.js`, `assets/`, `uploads/`, the `.dc.html` sources, `CNAME`,
+  `.nojekyll`, `robots.txt`, `sitemap.xml`.
+- Kept `README.md`, `handoff.md`, `.gitignore` at the **repo root** (tracked, never served);
+  `handoff.md` was un-gitignored and is now tracked.
+- Switched **GitHub Pages → Settings → Pages → Deploy from a branch → `main` / `/docs`** (must be
+  done in the GitHub UI; it also auto-creates `docs/CNAME` to keep the custom domain).
+
+### No URLs changed
+`docs/` became the site root, so every public URL resolves the same (`/`, `/privacy`, `/assets/…`,
+sitemap entries, canonicals). Verified live: all site URLs `200`; `/handoff.md` and `/README.md`
+return `404`.
+
+Commits: **`1c3fa06`** — _Serve site from docs/; keep dev docs at repo root_, plus merge
+**`94b538d`** integrating GitHub's auto-created `docs/CNAME`.
+
+---
+
+## Branch state (after cleanup)
+- **`main`** — live; deploys from `docs/`; up to date with `origin/main`.
+- **`demo`** — App Store screenshots (Track 2); local-only, intentionally not merged.
+- **Deleted** (all local-only, never pushed): `feat/google-search-appearance`, `docs/handoff`,
+  `chore/gitignore-handoff`, `chore/serve-from-docs` (all fast-forward merged into `main`), and
+  `feat/mobile-responsive` (force-deleted — its mobile work was already squashed into `main` via
+  `f25f28e "Optimize site for mobile"`, and everything else on it was an older, superseded state).
 
 ---
 
