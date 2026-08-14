@@ -161,18 +161,6 @@
       </div>
     </section>
 
-    <!-- STAT BAND -->
-    <section style="border-top:1px solid rgba(255,255,255,0.06);border-bottom:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.012)">
-      <div class="rv" style="max-width:1140px;margin:0 auto;padding:30px;display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap">
-        <span style="font:500 13.5px 'Schibsted Grotesk';color:#7d8079">Trusted by people who do deep work</span>
-        <div style="display:flex;gap:44px;flex-wrap:wrap">
-          <div><div style="font:600 26px 'Schibsted Grotesk';letter-spacing:-0.02em;color:#F1F3EF">2.4M</div><div style="font:500 12px 'JetBrains Mono';color:#71746d">focus hours logged</div></div>
-          <div><div style="font:600 26px 'Schibsted Grotesk';letter-spacing:-0.02em;color:#F1F3EF">41 days</div><div style="font:500 12px 'JetBrains Mono';color:#71746d">average active streak</div></div>
-          <div><div style="font:600 26px 'Schibsted Grotesk';letter-spacing:-0.02em;color:#F1F3EF">0</div><div style="font:500 12px 'JetBrains Mono';color:#71746d">trackers · just focus</div></div>
-        </div>
-      </div>
-    </section>
-
     <!-- HOW IT WORKS -->
     <section id="how" style="padding:108px 30px">
       <div style="max-width:1140px;margin:0 auto">
@@ -533,14 +521,15 @@
       <div class="rv" style="text-align:center;margin-bottom:48px">
         <div style="font:600 12px 'JetBrains Mono';letter-spacing:0.16em;color:#7d8079;margin-bottom:18px">PRICING</div>
         <h1 style="font:600 clamp(32px,6vw,60px)/1.02 'Schibsted Grotesk';letter-spacing:-0.04em;color:#F4F6F2">Stay focused.<br>Start free.</h1>
-        <p style="font:400 18px/1.55 'Schibsted Grotesk';color:#9ea29a;max-width:480px;margin:22px auto 0">The base timer is free forever. Upgrade to Pro for the full habit toolkit — less than a coffee a month.</p>
+        <p style="font:400 18px/1.55 'Schibsted Grotesk';color:#9ea29a;max-width:480px;margin:22px auto 0">The base timer is free forever. Upgrade to Pro for the full habit toolkit — monthly, yearly, or a one-time lifetime unlock.</p>
       </div>
 
       <!-- billing toggle -->
       <div class="rv" style="display:flex;justify-content:center;margin-bottom:32px">
-        <div style="display:flex;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:13px;padding:4px;gap:4px">
-          <div onClick="{{ setMonthly }}" style="font:600 14px 'Schibsted Grotesk';padding:9px 20px;border-radius:9px;cursor:pointer;color:{{ monthlyColor }};background:{{ monthlyBg }}">Monthly</div>
-          <div onClick="{{ setAnnual }}" style="font:600 14px 'Schibsted Grotesk';padding:9px 20px;border-radius:9px;cursor:pointer;display:flex;align-items:center;gap:8px;color:{{ annualColor }};background:{{ annualBg }}">Annual <span style="font:600 10px 'JetBrains Mono';color:#4A9D5B;background:rgba(74,157,91,0.16);padding:2px 7px;border-radius:20px">SAVE 50%</span></div>
+        <div style="display:flex;flex-wrap:wrap;justify-content:center;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:13px;padding:4px;gap:4px">
+          <div onClick="{{ setMonthly }}" style="font:600 14px 'Schibsted Grotesk';padding:9px 18px;border-radius:9px;cursor:pointer;color:{{ monthlyColor }};background:{{ monthlyBg }}">Monthly</div>
+          <div onClick="{{ setAnnual }}" style="font:600 14px 'Schibsted Grotesk';padding:9px 18px;border-radius:9px;cursor:pointer;display:flex;align-items:center;gap:8px;color:{{ annualColor }};background:{{ annualBg }}">Annual <span style="font:600 10px 'JetBrains Mono';color:#4A9D5B;background:rgba(74,157,91,0.16);padding:2px 7px;border-radius:20px">SAVE 50%</span></div>
+          <div onClick="{{ setLifetime }}" style="font:600 14px 'Schibsted Grotesk';padding:9px 18px;border-radius:9px;cursor:pointer;color:{{ lifetimeColor }};background:{{ lifetimeBg }}">Lifetime</div>
         </div>
       </div>
 
@@ -559,7 +548,7 @@
             </div>
             <div style="font:500 13px 'JetBrains Mono';color:#7d8079;margin-top:8px">{{ priceSub }}</div>
             <a href="https://apps.apple.com/app/deepflow-focus-pomodoro-timer/id6776970930" target="_blank" rel="noopener" style="display:block;text-align:center;font:600 15px 'Schibsted Grotesk';color:#0B0D0B;background:#F1F3EF;padding:14px 0;border-radius:12px;margin:26px 0 12px;cursor:pointer;text-decoration:none" style-hover="background:#ffffff">Get Deepflow Pro</a>
-            <div style="text-align:center;font:500 12.5px 'JetBrains Mono';color:#71746d;margin-bottom:24px">No card to start · Cancel anytime</div>
+            <div style="text-align:center;font:500 12.5px 'JetBrains Mono';color:#71746d;margin-bottom:24px">{{ proNote }}</div>
             <div style="font:600 11px 'JetBrains Mono';letter-spacing:0.12em;color:#7d8079;margin-bottom:3px">EVERYTHING IN FREE, PLUS</div>
             <div style="display:flex;flex-direction:column;gap:13px">
               <div style="display:flex;align-items:center;gap:11px;font:450 15px 'Schibsted Grotesk';color:#c7cabf"><span style="color:#4A9D5B">✓</span> Unlimited custom presets & drag-to-set</div>
@@ -587,7 +576,7 @@
         </div>
       </div>
 
-      <div class="rv" style="text-align:center;margin-top:36px;font:500 13px 'JetBrains Mono';color:#71746d">No lock-in · Cancel anytime · Prices in USD</div>
+      <div class="rv" style="text-align:center;margin-top:36px;font:500 13px 'JetBrains Mono';color:#71746d">No lock-in · Subscriptions cancel anytime · Prices in USD</div>
     </div>
   </div>
   </sc-if>
@@ -939,7 +928,12 @@ class Component extends DCLogic {
   renderVals(){
     const r = this.state.route;
     const fill = this.reduce ? 1 : this.state.fill;
+    // billing is a 3-way: 'monthly' | 'annual' | 'lifetime'
     const annual = this.state.billing === 'annual';
+    const lifetime = this.state.billing === 'lifetime';
+    const monthly = !annual && !lifetime;
+    // active pill = dark text on light fill; inactive = muted on transparent
+    const tab = on => ({ color: on ? '#0B0D0B' : '#94998f', bg: on ? '#F1F3EF' : 'transparent' });
     return {
       icon: this.state.icon,
       iconNav: this.iconEl(27),
@@ -975,15 +969,21 @@ class Component extends DCLogic {
       weekTargetBars: this.weekTargetBars(),
       historyRows: this.historyRows(),
       // pricing
-      price: annual ? '$1.50' : '$2.99',
-      priceUnit: '/month',
-      priceSub: annual ? 'Billed annually · $17.99/year' : 'Billed monthly · cancel anytime',
+      price: lifetime ? '$34.99' : annual ? '$1.50' : '$2.99',
+      priceUnit: lifetime ? 'once' : '/month',
+      priceSub: lifetime ? 'One-time purchase · yours forever'
+              : annual ? 'Billed annually · $17.99/year'
+              : 'Billed monthly · cancel anytime',
+      proNote: lifetime ? 'No card to start · One payment, no renewals' : 'No card to start · Cancel anytime',
       setMonthly: ()=>this.setState({billing:'monthly'}),
       setAnnual: ()=>this.setState({billing:'annual'}),
-      monthlyColor: annual ? '#94998f' : '#0B0D0B',
-      monthlyBg: annual ? 'transparent' : '#F1F3EF',
-      annualColor: annual ? '#0B0D0B' : '#9a9d95',
-      annualBg: annual ? '#F1F3EF' : 'transparent',
+      setLifetime: ()=>this.setState({billing:'lifetime'}),
+      monthlyColor: tab(monthly).color,
+      monthlyBg: tab(monthly).bg,
+      annualColor: tab(annual).color,
+      annualBg: tab(annual).bg,
+      lifetimeColor: tab(lifetime).color,
+      lifetimeBg: tab(lifetime).bg,
     };
   }
 }
