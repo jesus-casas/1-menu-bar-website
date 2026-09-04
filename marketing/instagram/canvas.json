@@ -1,0 +1,126 @@
+{
+  "artboards": [
+    {
+      "file": "Main.dc.html",
+      "title": "Carousel 1 · The hook",
+      "x": 0,
+      "y": 0,
+      "w": 1080,
+      "h": 1350
+    },
+    {
+      "file": "Carousel2.dc.html",
+      "title": "Carousel 2 · The problem",
+      "x": 1180,
+      "y": 0,
+      "w": 1080,
+      "h": 1350
+    },
+    {
+      "file": "Carousel3.dc.html",
+      "title": "Carousel 3 · The fix",
+      "x": 2360,
+      "y": 0,
+      "w": 1080,
+      "h": 1350
+    },
+    {
+      "file": "Carousel4.dc.html",
+      "title": "Carousel 4 · Menu bar",
+      "x": 3540,
+      "y": 0,
+      "w": 1080,
+      "h": 1350
+    },
+    {
+      "file": "Carousel5.dc.html",
+      "title": "Carousel 5 · The payoff",
+      "x": 4720,
+      "y": 0,
+      "w": 1080,
+      "h": 1350
+    },
+    {
+      "file": "Carousel6.dc.html",
+      "title": "Carousel 6 · Download",
+      "x": 5900,
+      "y": 0,
+      "w": 1080,
+      "h": 1350
+    },
+    {
+      "file": "PostTimer.dc.html",
+      "title": "Post 1 · Menu bar timer (free)",
+      "x": 0,
+      "y": 1520,
+      "w": 1080,
+      "h": 1350
+    },
+    {
+      "file": "PostChain.dc.html",
+      "title": "Post 2 · Don't break the chain",
+      "x": 1180,
+      "y": 1520,
+      "w": 1080,
+      "h": 1350
+    },
+    {
+      "file": "PostPro.dc.html",
+      "title": "Post 3 · Focus Stats + pricing",
+      "x": 2360,
+      "y": 1520,
+      "w": 1080,
+      "h": 1350
+    },
+    {
+      "file": "ReelTimer.dc.html",
+      "title": "Reel ad 1 · Menu bar timer (free)",
+      "x": 0,
+      "y": 3040,
+      "w": 1080,
+      "h": 1920
+    },
+    {
+      "file": "ReelChain.dc.html",
+      "title": "Reel ad 2 · Don't break the chain",
+      "x": 1180,
+      "y": 3040,
+      "w": 1080,
+      "h": 1920
+    },
+    {
+      "file": "ReelPro.dc.html",
+      "title": "Reel ad 3 · Focus Stats + pricing",
+      "x": 2360,
+      "y": 3040,
+      "w": 1080,
+      "h": 1920
+    }
+  ],
+  "annotations": [
+    {
+      "id": "row-carousel",
+      "x": 0,
+      "y": -118,
+      "w": 520,
+      "text": "POST FIRST — 6-slide carousel, swipe order left to right."
+    },
+    {
+      "id": "row-singles",
+      "x": 0,
+      "y": 1402,
+      "w": 560,
+      "text": "Then these three, in order: free timer → streaks → Pro."
+    },
+    {
+      "id": "row-reels",
+      "x": 0,
+      "y": 2922,
+      "w": 660,
+      "text": "Reels ad placement — 1080x1920. Everything sits above the line Instagram covers with its own UI."
+    }
+  ],
+  "launch": {
+    "view": "canvas"
+  }
+}
