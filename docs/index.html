@@ -528,27 +528,32 @@
       <div class="rv" style="display:flex;justify-content:center;margin-bottom:32px">
         <div style="display:flex;flex-wrap:wrap;justify-content:center;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:13px;padding:4px;gap:4px">
           <div onClick="{{ setMonthly }}" style="font:600 14px 'Schibsted Grotesk';padding:9px 18px;border-radius:9px;cursor:pointer;color:{{ monthlyColor }};background:{{ monthlyBg }}">Monthly</div>
-          <div onClick="{{ setAnnual }}" style="font:600 14px 'Schibsted Grotesk';padding:9px 18px;border-radius:9px;cursor:pointer;display:flex;align-items:center;gap:8px;color:{{ annualColor }};background:{{ annualBg }}">Annual <span style="font:600 10px 'JetBrains Mono';color:#4A9D5B;background:rgba(74,157,91,0.16);padding:2px 7px;border-radius:20px">SAVE 50%</span></div>
+          <div onClick="{{ setAnnual }}" style="position:relative;font:600 14px 'Schibsted Grotesk';padding:9px 18px;border-radius:9px;cursor:pointer;display:flex;align-items:center;gap:8px;color:{{ annualColor }};background:{{ annualBg }};box-shadow:{{ annualRing }}">Annual <span style="font:600 10px 'JetBrains Mono';color:{{ saveColor }};background:{{ saveBg }};padding:2px 7px;border-radius:20px">SAVE 50%</span></div>
           <div onClick="{{ setLifetime }}" style="font:600 14px 'Schibsted Grotesk';padding:9px 18px;border-radius:9px;cursor:pointer;color:{{ lifetimeColor }};background:{{ lifetimeBg }}">Lifetime</div>
         </div>
       </div>
+      <div class="rv" style="text-align:center;margin:-18px 0 30px;font:500 12.5px 'JetBrains Mono';color:#71746d;display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap"><span style="width:6px;height:6px;border-radius:50%;background:#4A9D5B;box-shadow:0 0 10px #4A9D5B"></span> Annual is our recommended plan — every Pro feature, half the monthly price</div>
 
       <!-- plan cards -->
       <div class="rv g2p" style="display:grid;grid-template-columns:1fr 1.15fr;gap:18px;align-items:stretch">
-        <div style="position:relative;order:2;background:rgba(255,255,255,0.03);border:1px solid rgba(74,157,91,0.4);border-radius:26px;padding:38px;overflow:hidden">
+        <div style="position:relative;order:2;background:rgba(255,255,255,0.03);border:1px solid {{ proBorder }};border-radius:26px;padding:38px;overflow:hidden;box-shadow:{{ proGlow }}">
           <div style="position:absolute;inset:0;background:radial-gradient(420px 280px at 110% -10%, rgba(74,157,91,0.16), transparent 70%)"></div>
           <div style="position:relative">
-            <div style="display:flex;align-items:center;gap:10px;margin-bottom:18px">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:18px;flex-wrap:wrap">
               {{ iconPricing }}
               <span style="font:600 19px 'Schibsted Grotesk';color:#F1F3EF">Deepflow Pro</span>
+              <sc-if value="{{ isAnnual }}"><span style="margin-left:auto;font:600 10px 'JetBrains Mono';letter-spacing:0.12em;color:#0B0D0B;background:#7fce93;padding:5px 10px;border-radius:20px;white-space:nowrap">RECOMMENDED</span></sc-if>
             </div>
-            <div style="display:flex;align-items:baseline;gap:8px">
+            <div style="display:flex;align-items:baseline;gap:8px;flex-wrap:wrap">
               <span style="font:600 clamp(38px,7vw,64px)/1 'Schibsted Grotesk';letter-spacing:-0.04em;color:#F4F6F2">{{ price }}</span>
               <span style="font:500 18px 'Schibsted Grotesk';color:#71746d">{{ priceUnit }}</span>
+              <sc-if value="{{ isAnnual }}"><span style="font:500 18px 'Schibsted Grotesk';color:#5f625b;text-decoration:line-through">$2.99</span></sc-if>
             </div>
             <div style="font:500 13px 'JetBrains Mono';color:#7d8079;margin-top:8px">{{ priceSub }}</div>
-            <a href="https://apps.apple.com/app/deepflow-focus-pomodoro-timer/id6776970930?mt=12" target="_blank" rel="noopener" style="display:block;text-align:center;font:600 15px 'Schibsted Grotesk';color:#0B0D0B;background:#F1F3EF;padding:14px 0;border-radius:12px;margin:26px 0 12px;cursor:pointer;text-decoration:none" style-hover="background:#ffffff">Get Deepflow Pro</a>
+            <sc-if value="{{ isAnnual }}"><div style="display:inline-flex;align-items:center;gap:8px;font:600 12px 'JetBrains Mono';letter-spacing:0.06em;color:#7fce93;background:rgba(74,157,91,0.14);border:1px solid rgba(74,157,91,0.3);padding:7px 12px;border-radius:9px;margin-top:14px">✓ You save $17.89 a year vs. monthly</div></sc-if>
+            <a href="https://apps.apple.com/app/deepflow-focus-pomodoro-timer/id6776970930?mt=12" target="_blank" rel="noopener" style="display:block;text-align:center;font:600 15px 'Schibsted Grotesk';color:#0B0D0B;background:#F1F3EF;padding:14px 0;border-radius:12px;margin:26px 0 12px;cursor:pointer;text-decoration:none" style-hover="background:#ffffff">{{ proCta }}</a>
             <div style="text-align:center;font:500 12.5px 'JetBrains Mono';color:#71746d;margin-bottom:24px">{{ proNote }}</div>
+            <sc-if value="{{ showAnnualNudge }}"><div onClick="{{ setAnnual }}" style="display:flex;align-items:center;justify-content:center;gap:8px;font:600 12.5px 'JetBrains Mono';color:#7fce93;background:rgba(74,157,91,0.1);border:1px solid rgba(74,157,91,0.28);border-radius:11px;padding:11px 14px;margin-bottom:24px;cursor:pointer;text-align:center" style-hover="background:rgba(74,157,91,0.18)">{{ nudgeText }}</div></sc-if>
             <div style="font:600 11px 'JetBrains Mono';letter-spacing:0.12em;color:#7d8079;margin-bottom:3px">EVERYTHING IN FREE, PLUS</div>
             <div style="display:flex;flex-direction:column;gap:13px">
               <div style="display:flex;align-items:center;gap:11px;font:450 15px 'Schibsted Grotesk';color:#c7cabf"><span style="color:#4A9D5B">✓</span> Unlimited custom presets & drag-to-set</div>
@@ -980,6 +985,18 @@ class Component extends DCLogic {
               : annual ? 'Billed annually · $17.99/year'
               : 'Billed monthly · cancel anytime',
       proNote: lifetime ? 'No card to start · One payment, no renewals' : 'No card to start · Cancel anytime',
+      // annual is the plan we steer people to: it carries the badge, the ring and
+      // the saving anchor; the other two tabs get a one-tap nudge back to it
+      isAnnual: annual,
+      proCta: annual ? 'Get Deepflow Pro — Annual' : 'Get Deepflow Pro',
+      proBorder: annual ? 'rgba(74,157,91,0.75)' : 'rgba(74,157,91,0.4)',
+      proGlow: annual ? '0 0 0 1px rgba(74,157,91,0.35), 0 24px 60px rgba(74,157,91,0.14)' : 'none',
+      showAnnualNudge: !annual,
+      nudgeText: lifetime ? 'Not ready for $34.99? Annual is $17.99/year →'
+                          : 'Switch to annual — $1.50/month, save $17.89 →',
+      annualRing: annual ? 'none' : 'inset 0 0 0 1px rgba(74,157,91,0.45)',
+      saveColor: annual ? '#0B0D0B' : '#4A9D5B',
+      saveBg: annual ? 'rgba(74,157,91,0.28)' : 'rgba(74,157,91,0.16)',
       setMonthly: ()=>this.setState({billing:'monthly'}),
       setAnnual: ()=>this.setState({billing:'annual'}),
       setLifetime: ()=>this.setState({billing:'lifetime'}),
